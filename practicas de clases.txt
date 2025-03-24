@@ -1,0 +1,37 @@
+mostrar los cliente q sea de la ciudad de mexico ,londres o belice
+mostrar las ordenes q se hicieron en el año 1996 y 1997
+mostrar los precios de productos q se encuentre entre cero y 20 o 30 y 50
+
+
+group by se usa para agrupar filas en una o mas columnas , normalmente junto con funciones
+de agregacion como: count , sum ,max , avg ,etc.
+
+se podria decir q el 
+where lo podremos utulizar en alguna parte 
+
+where productoid between 0 and 50 
+group by categoryid
+having price >=20 and price <=30 
+
+el comodin determin la cantidad de caracteres hay en la tabla
+select * from customers
+where contactname like ´___________´
+where contactname like ´__________a%´
+------------------1----------------------------------
+SELECT * from Employees
+where LastName like "D%" or FirstName like "O%"
+
+------------------2----------------------------------
+SELECT * from Customers
+where CustomerName like "_____a%"
+
+------------------3----------------------------------
+SELECT OrderDetails.ProductID , avg(Quantity) as promedio_cantidades_vendidas
+ from OrderDetails
+GROUP by ProductID
+
+------------------4----------------------------------
+SELECT  OrderDetailID , OrderID , total(Quantity) as total_Vendidas from OrderDetails
+GROUP by OrderID
+HAVING OrderDetailID BETWEEN 0 and 40
+order by OrderDetailID ASC

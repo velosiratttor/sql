@@ -1,0 +1,35 @@
+concepto de sub consulta: una sub consulta en sql es una consulta dentro de otra sub consulta . normalmente se utilizan en la institucion SELECT
+pero tambien se puede utulizar insert , update o delete o dentro de otra sub consulta y esta deben encerrarse en parentesis 
+SELECT CustomerName, CustomerID, ContactName
+FROM Customers
+WHERE CustomerID = (
+    SELECT MAX(CustomerID)
+    FROM Customers
+);
+
+la sub consulta 
+SELECT CustomerID,  CustomerName
+FROM Customers
+WHERE CustomerID IN (
+    SELECT CustomerID
+    FROM Orders
+    GROUP BY CustomerID
+    HAVING COUNT(OrderID) > (
+        SELECT AVG(Ordercount)
+        FROM (
+            SELECT COUNT(OrderID) AS OrderCount
+            FROM Orders
+            GROUP BY CustomerID
+        ) AS SubQuery
+    )
+)
+
+SELECT CategoryID,ProductName, 
+(SELECT CategoryName FROM Categories 
+WHERE Products.CategoryID=CategoryID) as nombre_categoria, 
+sum(price) as total_por_categoria 
+from Products 
+WHERE SupplierID BETWEEN 0 AND 10 
+GROUP by CategoryID 
+HAVING total_por_categoria BETWEEN 100 and 300
+ORDER BY CategoryID DESC

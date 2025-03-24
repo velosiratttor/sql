@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/03 Lab 2 Pc 17/Desktop/python_moises/trabajos_mios/Nortwind.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="2098"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="Categories" custom_title="0" dock_id="1" table="4,10:mainCategories"/><dock_state state="000000ff00000000fd00000001000000020000000000000000fc0100000001fb000000160064006f0063006b00420072006f00770073006500310100000000ffffffff0000011e00ffffff000000000000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="SQL 1">--Parte 1
+----------------------------------------------------------------------------------------------------------------------------------
+1- select CategoryID , (select ProductName from Products where Products.CategoryID = Categories.CategoryID)as Productos , CategoryName as Categoria 
+	from Categories where CategoryName in ('Beverages')
+----------------------------------------------------------------------------------------------------------------------------------
+2- select CustomerName as Clientes , (select CustomerID from Orders where Orders.CustomerID = Customers.CustomerID) as Id_Pedidos from Customers
+----------------------------------------------------------------------------------------------------------------------------------
+3- select FirstName as Empleados ,LastName as Apellido , 
+	(select EmployeeID from Orders where Orders.EmployeeID = Employees.EmployeeID) as Id_Pedidos from Employees
+----------------------------------------------------------------------------------------------------------------------------------
+4- select ProductName as Productos , avg(Price) as Promedio_Precio from Products order by Promedio_Precio desc
+----------------------------------------------------------------------------------------------------------------------------------
+5- select CustomerID ,  CustomerName as Clientes , (select CustomerID from Orders where Orders.CustomerID = Customers.CustomerID) as Id_Pedidos  , 
+	(select OrderDate  from Orders where Orders.CustomerID = Customers.CustomerID and OrderDate LIKE '1997%') as Fecha_Pedido from Customers
+----------------------------------------------------------------------------------------------------------------------------------
+6- SELECT CategoryName as Categorias , 
+(select(SELECT SupplierName from Suppliers where Suppliers.SupplierID = Products.SupplierID) from Products ) as Proveedores
+FROM Categories	where Categorias in ('Confections')
+----------------------------------------------------------------------------------------------------------------------------------
+7- select ProductName as Productos , (Select CategoryName from Categories where Categories.CategoryID = Products.CategoryID) as categoria 
+	from Products where categoria in ('Confections')
+----------------------------------------------------------------------------------------------------------------------------------
+8- select FirstName As Nombre_Empleado , LastName as Apellido from Employees --No hay empleados con apellido igual que el otro
+----------------------------------------------------------------------------------------------------------------------------------
+9- select (SELECT (SELECT(select CustomerName from Customers where Customers.CustomerID = Orders.CustomerID)from Orders)from OrderDetails where OrderDetails.ProductID = Products.ProductID) as Clientes,
+		ProductName as Productos, Max(Price) as Precio
+	from Products
+----------------------------------------------------------------------------------------------------------------------------------
+10-
+SELECT ProductName AS Productos,(SELECT SupplierName FROM Suppliers WHERE Suppliers.SupplierID = Products.SupplierID) AS Proveedor,
+    (SELECT City FROM Suppliers WHERE SupplierID = Products.SupplierID AND 
+    City = (SELECT City FROM Customers WHERE Customers.City = Suppliers.City )) AS Ciudad FROM Products
+WHERE Products.SupplierID IN (SELECT SupplierID FROM Suppliers WHERE City IN (SELECT City FROM Customers))
+----------------------------------------------------------------------------------------------------------------------------------</sql><sql name="SQL 2">--Parte2
+----------------------------------------------------------------------------------------------------------------------------------
+select OrderDetailID , (select(select CustomerName from Customers where Customers.CustomerID = Orders.CustomerID) from Orders 
+where OrderID = OrderDetails.OrderID) as Clientes , Quantity as Cantidad from OrderDetails GROUP by Clientes
+----------------------------------------------------------------------------------------------------------------------------------
+select (Select ProductName from Products where Products.CategoryID = Categories.CategoryID ) as Productos  , CategoryName  as categoria 
+from Categories limit 10
+----------------------------------------------------------------------------------------------------------------------------------
+select OrderID as Ordenes ,(select FirstName from Employees where Employees.EmployeeID = Orders.EmployeeID) as Empleado , 
+(select Quantity from OrderDetails where OrderDetails.OrderID = Orders.OrderID) as Cantidad from Orders
+where Cantidad &gt; 50
+----------------------------------------------------------------------------------------------------------------------------------
+select ProductName as Productos , (select CategoryName from Categories where Categories.CategoryID = Products.CategoryID ) 
+as Categoria  , avg(Price) as Precio_Mayor_Promedio from Products
+----------------------------------------------------------------------------------------------------------------------------------
+
+SELECT CustomerID AS ID_Cliente, CustomerName AS Cliente FROM Customers 
+WHERE (SELECT COUNT(*) FROM Orders WHERE Orders.CustomerID = Customers.CustomerID) &gt; 5
+----------------------------------------------------------------------------------------------------------------------------------
+select ProductName as Productos , (select Quantity from OrderDetails where OrderDetails.ProductID = Products.ProductID ) as Cantidad 
+from Products  order by Cantidad desc
+----------------------------------------------------------------------------------------------------------------------------------
+select count(CustomerID) as Clientes,  City from Customers GROUP by City having Clientes &gt; 5
+----------------------------------------------------------------------------------------------------------------------------------
+SELECT SupplierID AS ID_Proveedor, SupplierName AS Proveedor FROM Suppliers 
+WHERE (SELECT COUNT(*) FROM Products WHERE Products.SupplierID = Suppliers.SupplierID) &gt; 3
+----------------------------------------------------------------------------------------------------------------------------------
+SELECT EmployeeID AS ID_Empleado, FirstName AS Nombre, LastName AS Apellido, 
+(SELECT COUNT(*) FROM Orders WHERE Orders.EmployeeID = Employees.EmployeeID) AS Total_Pedidos
+FROM Employees WHERE (SELECT COUNT(*) FROM Orders WHERE Orders.EmployeeID = Employees.EmployeeID) &gt; (SELECT AVG(EmployeeID)from Orders )
+----------------------------------------------------------------------------------------------------------------------------------
+SELECT (select CategoryName from Categories where Categories.CategoryID = Products.CategoryID) as Categoria ,
+ avg(Price) as PrecioPromedio FROM Products
+----------------------------------------------------------------------------------------------------------------------------------</sql><sql name="SQL 3">--Parte 3
+----------------------------------------------------------------------------------------------------------------------------------
+SELECT OrderID AS ID_Pedido, CustomerID AS ID_Cliente, OrderDate AS Fecha_Pedido FROM Orders 
+WHERE OrderDate BETWEEN '1995-01-01' AND '1997-12-31' AND CustomerID IN (SELECT CustomerID FROM Customers WHERE Country = 'USA')
+----------------------------------------------------------------------------------------------------------------------------------
+SELECT EmployeeID AS ID_Empleado,FirstName AS Nombre,LastName AS Apellido FROM Employees 
+WHERE EmployeeID IN (SELECT EmployeeID FROM Orders WHERE OrderDate like '1997_%') --No hay fechas 1998 se cambio a 1997
+----------------------------------------------------------------------------------------------------------------------------------
+SELECT CustomerID AS ID_Cliente, CustomerName AS Nombre_Cliente , (SELECT OrderDate from Orders 
+where Orders.CustomerID = Customers.CustomerID and  OrderDate like '_____01_%' or OrderDate like '_____02_%') as Fecha FROM Customers 
+----------------------------------------------------------------------------------------------------------------------------------
+SELECT ProductName as Productos , Price as Precio from Products where Precio BETWEEN 10 and 50 order by Price desc
+----------------------------------------------------------------------------------------------------------------------------------
+SELECT EmployeeID AS ID_Empleado,FirstName AS Nombre,LastName AS Apellido
+FROM Employees WHERE EmployeeID BETWEEN 3 AND 7 AND EmployeeID IN (SELECT DISTINCT EmployeeID FROM Orders)
+----------------------------------------------------------------------------------------------------------------------------------
+Select SupplierName , Country FROM Suppliers where Country in ('Germany', 'France', 'UK')
+----------------------------------------------------------------------------------------------------------------------------------
+select CategoryID , ProductName from Products where CategoryID in (2,4,6)
+----------------------------------------------------------------------------------------------------------------------------------
+select CustomerName , PostalCode from Customers where PostalCode BETWEEN 10000 and 20000
+----------------------------------------------------------------------------------------------------------------------------------
+SELECT ProductName AS Producto FROM Products WHERE ProductID IN (SELECT ProductID FROM OrderDetails WHERE OrderID BETWEEN 10250 AND 10300)
+----------------------------------------------------------------------------------------------------------------------------------
+SELECT EmployeeID AS ID_Empleado, FirstName AS Nombre, LastName AS Apellido from Employees
+WHERE FirstName IN ('Nancy', 'Margaret', 'Robert');
+
+</sql><sql name="SQL 4">----------------------------------------parte 4-------------------------------------------------------
+SELECT * from Orders ORDER by CustomerID DESC
+--------------------------------------------------------------------------------------------------------------
+SELECT ProductName as productos , (SELECT CategoryName FROM Categories where Categories.CategoryID = Products.CategoryID) as categorias , price as precio from Products
+GROUP by categorias ORDER by precio DESC
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+SELECT 
+    (SELECT FirstName FROM Employees AS E WHERE E.EmployeeID = O.EmployeeID) AS nombre_empleados,
+    COUNT(O.EmployeeID) AS pedidos
+FROM Orders AS O
+WHERE O.EmployeeID IN (SELECT EmployeeID FROM Employees)
+GROUP BY O.EmployeeID
+ORDER by pedidos DESC
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SELECT 
+    (SELECT CategoryName FROM Categories AS C WHERE C.CategoryID = P.CategoryID) AS categorias,
+    COUNT(ProductName) AS productos
+FROM Products AS P
+WHERE P.CategoryID IN (SELECT CategoryID FROM Categories)
+GROUP BY P.CategoryID
+ORDER BY categorias;
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SELECT SupplierName as proveedores ,(SELECT count(ProductID) FROM Products as P WHERE P.SupplierID = S.SupplierID) as producto 
+FROM Suppliers as S
+GROUP by proveedores
+ORDER by producto DESC
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+SELECT (SELECT CustomerName FROM Customers as C WHERE C.CustomerID = O.CustomerID) as clientes , OrderDate as fecha 
+from Orders as O 
+GROUP by clientes
+ORDER by OrderDate DESC
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SELECT  ProductName as productos ,(SELECT Count(Quantity) FROM OrderDetails as O where O.ProductID = P.ProductID) as Cantidad_vendidas 
+FROM Products as P
+GROUP by productos
+order by Cantidad_vendidas DESC
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SELECT 
+    (SELECT CustomerName FROM Customers AS C WHERE C.CustomerID = O.CustomerID) AS clientes,
+    COUNT(O.CustomerID) AS pedidos,
+    (SELECT Country FROM Customers AS C WHERE C.CustomerID = O.CustomerID) AS pais
+FROM Orders AS O
+WHERE O.CustomerID IN (SELECT CustomerID FROM Customers WHERE Country = 'France')
+GROUP BY O.CustomerID, pais
+ORDER BY clientes;
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SELECT 
+    E.FirstName AS Nombre_empleados,
+    COUNT(O.OrderID) AS pedidos,
+    O.OrderDate AS Fecha
+FROM 
+    Employees AS E
+JOIN 
+    Orders AS O
+ON 
+    E.EmployeeID = O.EmployeeID
+WHERE 
+    O.OrderDate LIKE '1997%'
+GROUP BY 
+    O.EmployeeID
+ORDER BY 
+    E.FirstName, O.OrderDate;
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SELECT count(CustomerID) as clientes , City as ciudad FROM Customers 
+GROUP by ciudad
+ORDER by clientes DESC
+
+
+
+</sql><sql name="SQL 5">SELECT 
+    E.FirstName AS Nombre_empleados,
+    (SELECT COUNT(O.OrderID) FROM Orders AS O WHERE O.EmployeeID = E.EmployeeID AND O.OrderDate LIKE '1997%') AS pedidos,
+    (SELECT O.OrderDate FROM Orders AS O WHERE O.EmployeeID = E.EmployeeID AND O.OrderDate LIKE '1997%' LIMIT 1) AS Fecha
+FROM 
+    Employees AS E
+WHERE 
+    E.EmployeeID IN (SELECT O.EmployeeID FROM Orders AS O WHERE O.OrderDate LIKE '1997%');
+</sql><current_tab id="4"/></tab_sql></sqlb_project>

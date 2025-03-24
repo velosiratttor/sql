@@ -1,0 +1,76 @@
+--Ejercicios de SELECT 1#
+
+select * from Products
+SELECT * from Customers
+SELECT * from Orders
+SELECT * FROM Employees
+select * from Categories
+SELECT * from Suppliers
+SELECT * FROM OrderDetails
+SELECT * from Shippers
+--Ejercicios 2#
+
+SELECT ProductName , CategoryID from Products
+SELECT CustomerName , city , country from Customers
+select FirstName , LastName  from Employees
+SELECT OrderID , CustomerID , OrderDate from Orders
+SELECT CategoryName , Description from Categories 
+SELECT SupplierName , ContactName , adress from Suppliers
+select ProductID , price, Unit from Products
+SELECT OrderID , ProductID , Quantity from OrderDetails
+select ShipperName , Phone from Shippers
+
+-- Ejercicios 3#
+SELECT * from products where Price > 30
+select * from Employees where LastName > "Fuller"
+SELECT * from Orders where OrderDate > "1996-01-01"
+SELECT * from Suppliers where country = "USA"
+select ProductName , OrderDetails.Quantity from products , OrderDetails where OrderDetails.Quantity < 20
+SELECT * from Employees where BirthDate < "1970-01-01"
+SELECT * from products where price = 15
+SELECT * from Suppliers where country != "USA"
+SELECT * from Products where CategoryID = 2
+
+--Parte 4: Ejercicios con WHERE usando operadores de comparación y lógicos
+
+SELECT * from products where price > 20 and price < 50
+SELECT * from Employees where LastName = "Davolio" or BirthDate >= "1968/1/1" and BirthDate  <= "1980/1/1"
+SELECT * from orders where EmployeeID = 3 and ShipperID = 1
+select * from Suppliers where Country = "USA" or Country = "UK"
+select * from Products where price > 50 or CategoryID = 1
+SELECT * from Employees where FirstName != "Nancy"
+select OrderDetailID , Products.ProductName , Quantity , Products.Price from OrderDetails , products where Quantity < 30 and products.price < 20
+SELECT * from Suppliers where city = "Londona" or "Paris" and Country = "UK"
+SELECT * from Products where CategoryID = 1 or CategoryID = 2 and price > 15
+
+--Parte 5: Preguntas de Análisis (Escriba la consulta como respuesta)
+
+SELECT CategoryID as categoria , ProductName , MIN(price) as precio_minimo
+from Products GROUP by CategoryID
+
+SELECT * from OrderDetails where Quantity > 10
+
+SELECT * from Products where unit > 20 add price > 20
+
+SELECT * from OrderDetails where  OrderID > 1000
+
+SELECT * from products where Unit like  "%bottles"
+
+SELECT * from Suppliers where Country != "USA" and Country != "UK"
+
+SELECT * , max (Quantity) as maxima_cantidad_de_ventas from OrderDetails
+
+SELECT * from OrderDetails ORDER by Quantity DESC limit 5
+
+SELECT ProductName , OrderDetails.Quantity , price from Products, OrderDetails where OrderDetails.Quantity > 50 
+
+SELECT * from Customers where Country = "Germany"
+
+SELECT * from Employees where BirthDate >= "1958-09-19" and BirthDate <= "1963-07-02"
+
+SELECT ProductName , OrderDetails.Quantity , Price from Products , OrderDetails where Price <= 15 and OrderDetails.Quantity >= 20 Order by Price DESC
+
+SELECT * from Orders where OrderDate like "1997%"
+
+
+
